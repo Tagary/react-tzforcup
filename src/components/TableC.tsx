@@ -9,24 +9,47 @@ const TableC = () => {
   const [thirdCol, setThirdCol] = React.useState<ICurrencyfull>();
 
   React.useEffect(() => {
-    subcribeCurrency();
+    subcribeCurrencyFirst();
+    subcribeCurrencySecond();
+    subcribeCurrencyThird();
   }, []);
 
-  const subcribeCurrency = async () => {
+  const subcribeCurrencyFirst = async () => {
     try {
-      const [firstCollResp, SecondCollResp, ThirdCollResp] = await Promise.all([
-        axios.get('http://localhost:3000/api/v1/first/poll'),
-        axios.get('http://localhost:3000/api/v1/second/poll'),
-        axios.get('http://localhost:3000/api/v1/third/poll'),
-      ]);
+      const firstCollResp = await axios.get('http://localhost:3000/api/v1/first/poll');
+
       setFirstCol(firstCollResp.data);
-      setSecondCol(SecondCollResp.data);
-      setThirdCol(ThirdCollResp.data);
-      await subcribeCurrency();
+      await subcribeCurrencyFirst();
     } catch (error) {
       alert('ошибка');
       setTimeout(() => {
-        subcribeCurrency();
+        subcribeCurrencyFirst();
+      });
+    }
+  };
+  const subcribeCurrencySecond = async () => {
+    try {
+      const SecondCollResp = await axios.get('http://localhost:3000/api/v1/second/poll');
+
+      setSecondCol(SecondCollResp.data);
+      await subcribeCurrencySecond();
+    } catch (error) {
+      alert('ошибка');
+      setTimeout(() => {
+        subcribeCurrencySecond();
+      });
+    }
+  };
+  const subcribeCurrencyThird = async () => {
+    try {
+      const ThirdCollResp = await axios.get('http://localhost:3000/api/v1/third/poll');
+
+      setThirdCol(ThirdCollResp.data);
+      await subcribeCurrencyThird();
+    } catch (error) {
+      alert('ошибка');
+      setTimeout(() => {
+        subcribeCurrencyThird();
       });
     }
   };
@@ -35,10 +58,10 @@ const TableC = () => {
   let arrayUSD: Array<number> = [];
   let arrayEUR: Array<number> = [];
 
-  if (firstCol !== undefined) {
-    arrayRUB = [firstCol.rates.RUB, secondCol!.rates.RUB, thirdCol!.rates.RUB];
-    arrayUSD = [firstCol?.rates.USD, secondCol!.rates.USD, thirdCol!.rates.USD];
-    arrayEUR = [firstCol?.rates.EUR, secondCol!.rates.EUR, thirdCol!.rates.EUR];
+  if ((firstCol && secondCol && thirdCol) !== undefined) {
+    arrayRUB = [firstCol!.rates.RUB, secondCol!.rates.RUB, thirdCol!.rates.RUB];
+    arrayUSD = [firstCol!.rates.USD, secondCol!.rates.USD, thirdCol!.rates.USD];
+    arrayEUR = [firstCol!.rates.EUR, secondCol!.rates.EUR, thirdCol!.rates.EUR];
   }
 
   const minValRUB = Math.min(...arrayRUB);
